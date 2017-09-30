@@ -35,13 +35,6 @@ bindsym $mod+Return exec urxvt
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)   -----USING ROFI INSTEAD-----
-#bindsym $mod+d exec dmenu_run
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
-
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
@@ -152,54 +145,71 @@ bindsym $mod+r mode "resize"
 #color variables
 
 set $active-text-secondary	#24ae24
-set $active-text		#e42f0c
+set $active-text		#2c2c2c
 set $incative-text		#2a2a2a
-set $bg                 	#2a2a2a
+set $bg                 	#2c2c2c
 set $bg-color			#2a2a2a
-set $bg-active			#e42f0c
-set $bg-inactive		#2a2a2a
+set $bg-active			#2c2c2c
+set $bg-inactive		#fafafa
 set $bg-urgent			#00ff00
 set $border-focused		#e42f0c
 set $border-unfocused		#2a2a2a
 set $indicator			#e42f0c
-set $white-color		#f6f6f6
+set $white-color		#ffffff
 
 #rofi
-#bindsym $mod+d exec rofi -show run -lines 5 -eh 2 -width 100 -padding 30 -bw 0 -opacity "200" -bc "#e42f0c" -bg "$bg-inactive" -fg "#e42f0c" -hlbg "$bg-inactive" -hlfg "$white-color"
-bindsym $mod+d exec rofi -show run -lines 5 -width 100 -padding 300 -opacity "80" -font "Roboto 50" -separator-style "none" -bc "#e42f0c" -bg "$bg-inactive" -fg "#e42f0c" -hlbg "$bg-inactive" -hlfg "$white-color"
+#bindsym $mod+d exec rofi -show run -lines 5 -eh 2 -width 100 -padding 300 -opacity "80" -opacity "200" -bc "#e42f0c" -bg "$bg-inactive" -fg "#e42f0c" -hlbg "$bg-inactive" -hlfg "$white-color"
+#bindsym $mod+d exec rofi -lines 30 -width 30 -padding 60 -opacity "70" -font "Roboto 12" -separator-style "solid" -opacity "80" -show run -bc "#e42f0c" -bg "#e42f0c" -fg "#e42f0c" -hlbg "#e42f0c" -hlfg "#e42f0c"
+
+bindsym $mod+d exec rofi -show run
+
+#dmenu
+#bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 
-
-# window colors         border              	background	        text      		indicator
-client.focused          $bg-active          	$bg-active		$white-color		$indicator
-client.unfocused        $bg-inactive		$bg-inactive		$active-text		$indicator
-client.focused_inactive $bg-inactive		$bg-inactive		$active-text		$indicator
-client.urgent		$bg-urgent		$bg-urgent		$white-color		$bg-urgent
-
-# window colors			border			background	text      		indicator
-#client.focused			$bg-active		$bg-active      $white-color		$indicator
-#client.unfocused		$bg-inactive		$bg-inactive	$active-text		$indicator
-#client.focused_inactive	$bg-inactive		$bg-inactive	$active-text		$indicator
-#client.urgent			$bg-urgent		$bg-urgent      $white-color		$bg-urgent
+# Set colors from Xresources
+# Change 'color7' and 'color2' to whatever colors you want i3 to use
+# from the generated scheme.
+# NOTE: The '#f0f0f0' in the lines below is the color i3 will use if
+# it fails to get colors from Xresources for some reason.
+set_from_resource $fg i3wm.color7 #f0f0f0
+set_from_resource $bg i3wm.color0 #039be5
+set_from_resource $ta i3wm.color1 #f0f0f0
+set $border	#b8d5e5
+# class                 border  backgr. text indicator child_border
+client.focused          $border     $bg     $ta	$border	$border
+client.focused_inactive $border     $bg     $fg	$border	$border
+client.unfocused        $border     $bg     $fg	$border	$border
+client.urgent           $bg     $bg     $fg	$border	$bg
+client.placeholder	$bg	$bg	$fg	$border	$bg
 
 
 #border thickness
-new_window pixel 1
-new_float pixel 1
+new_window pixel 2
+new_float pixel 2
+
+gaps inner 10
+gaps outer 0
+
+
 #bindsym mod+x toggle border
 
 #------------------CROMPTON TESTING-----------------
-#exec compton --config /home/niraj/.config/i3
-exec compton -f -D "5" -i "0.9"
+#exec tint2
+#exec compton --config /home/niraj/.config/i3/compton.conf
+#exec compton -b --backend glx --vsync opengl-swc --config /home/niraj/.config/i3/compton.conf
+exec --no-startup-id compton
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
+exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Natural Scrolling Enabled" 1
+exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 #bar {
 #        
 #	
-#	status_command polybar top
+#	status_command i3status
 #       tray_output primary
 #	colors {
 #		background $bg-color
@@ -213,25 +223,28 @@ exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 
 
-
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec /home/niraj/.config/i3/brightness.sh +5
 bindsym XF86MonBrightnessDown exec /home/niraj/.config/i3/brightness.sh -5
 
 
-# Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 1 +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 1 -5%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 1 toggle
+# Pulse Audio controls(Ubuntu)
+#bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 1 +5%
+#bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 1 -5%
+#bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 1 toggle
 
-bindsym $mod+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
-bindsym $mod+XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
-bindsym $mod+XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
-bindsym Print exec scrot
+# Alsa audio controls(Arch)
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -D pulse sset Master 5%+
+bindsym XF86AudioLowerVolume exec --no-startup-id amixer -D pulse sset Master 5%-
+bindsym XF86AudioMute exec --no-startup-id amixer -q sset Master toggle
+
+bindsym Print exec scrot '%Y-%m-%d-%h-%m-%s_$wx$h.png' -e 'mv $f ~/Pictures/screenshots/'
 
 #wallpaper at boot
-exec_always feh --bg-tile ~/Pictures/feh/*.*
+#exec_always wal -i '/home/niraj/Pictures/wallpapers/wal'
+exec_always feh --bg-scale /home/niraj/Pictures/wallpapers/feh/*.jpg
+exec_always feh --bg-scale /home/niraj/Pictures/wallpapers/feh/*.png
 
-#wal- choose random wallpaper and sets it along with colorschemes
-bindsym $mod+z wal -i '/home/niraj/Pictures/a/1.jpg'
+
+exec_always xrdb ~/.Xresources

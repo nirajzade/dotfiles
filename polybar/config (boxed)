@@ -10,25 +10,25 @@
 [colors]
 ;background = ${xrdb:color0:#222}
 background = #00000000
-;background-alt = #3a4040
-background-alt = #2c2c2c
-foreground = #ffb8d5e5
-foreground-alt = #000
+background-alt = #ff2c2c2c
+;foreground = ${xrdb:color7:#222}
+foreground = #ff63da25
+foreground-alt = #555
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
-
-underline = #ffb8d5e5
+underline = #ff63da25
 underline-alt = #ffff0000
 
-underline-charging = #b8d5e5
-background-charging = #3a4040
-foreground-charging = #3a4040
+underline-charging = #ffff00
+background-charging = #2c2c2c
+foreground-charging = #2c2c2c
 
-underline-workspace = #ffff0000
-background-workspace = #ff3a4040
-underline-workspace-alt = #ffb8d5e5
-background-workspace-alt = #b8d5e5
+underline-workspace = #aa000000
+background-workspace = #ff2c2c2c
+
+underline-workspace-alt = #ff0000
+background-workspace-alt = #ff0000
 ;==============================================================================
 [bar/example]
 ;==============================================================================
@@ -140,10 +140,10 @@ tray-padding = 2
 ;==============================================================================
 ;monitor = ${env:MONITOR:HDMI-1}
 width = 100%
-height = 25
+height = 27
 ;offset-x = 1%
 ;offset-y = 1%
-radius = 0
+radius = 0.0
 fixed-center = true
 ;bottom=true
 
@@ -153,8 +153,8 @@ foreground = ${colors.foreground}
 line-size = 3
 line-color = #f00
 
-border-size = 0
-border-color = #0063da25
+border-size = 4
+border-color = #00000000
 
 padding-left = 0
 padding-right = 0
@@ -162,16 +162,14 @@ padding-right = 0
 module-margin-left = 0
 module-margin-right = 0
 
-font-0 = Hack-Regular:pixelsize=9;1
-font-1 = Kubasta:pixelsize=20;1
-font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
-font-3 = siji:pixelsize=10;1
-font-4 = FontAwesome:size=10;
-font-5 = Kubasta:pixelsize=15;
+font-0 = fixed:pixelsize=10;1
+font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
+font-2 = siji:pixelsize=10;1
+font-3 = FontAwesome:size=10;
 
-modules-left =
-modules-center = date wlan filesystem memory cpu battery i3
-modules-right =
+modules-left = date wlan filesystem
+modules-center = i3
+modules-right = memory cpu battery
 
 tray-position = right
 tray-padding = 2
@@ -212,19 +210,16 @@ label-indicator-margin = 1
 label-indicator-background = ${colors.secondary}
 label-indicator-underline = ${colors.secondary}
 
-;------------------------------------------------------------------------------
 [module/filesystem]
-;------------------------------------------------------------------------------
 type = internal/fs
 interval = 25
 
 mount-0 = /
 
-label-mounted = "    FILESYSTEM %{F#63da25}%mountpoint%%{F-}:  %percentage_used%%    "
+label-mounted = "  %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%  "
 label-mounted-background =  ${colors.background-alt}
 label-mounted-underline= ${colors.underline}
-
-label-unmounted = "    %mountpoint% not mounted    "
+label-unmounted = "  %mountpoint% not mounted  "
 label-unmounted-foreground = ${colors.foreground-alt}
 label-unmounted-background =  ${colors.background-alt}
 label-unmounted-underline= ${colors.underline}
@@ -266,17 +261,13 @@ label-mode-background = ${colors.primary}
 
 ; focused = Active workspace on focused monitor
 label-focused = %index%
-label-focused-font = 6
-
 label-focused-background = ${module/bspwm.label-focused-background}
-label-focused-underline = ${colors.underline-workspace}
+label-focused-underline = ${colors.underline}
 label-focused-padding = ${module/bspwm.label-focused-padding}
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused-background = ${colors.background-workspace}
-label-unfocused-underline = ${colors.underline-workspace-alt}
 label-unfocused = %index%
-label-unfocused-font = 6
 label-unfocused-padding = ${module/bspwm.label-occupied-padding}
 
 ; visible = Active workspace on unfocused monitor
@@ -315,12 +306,12 @@ label = BL
 bar-width = 10
 bar-indicator = |
 bar-indicator-foreground = #ff
-bar-indicator-font = 3
+bar-indicator-font = 2
 bar-fill = ─
-bar-fill-font = 3
+bar-fill-font = 2
 bar-fill-foreground = #9f78e1
 bar-empty = ─
-bar-empty-font = 3
+bar-empty-font = 2
 bar-empty-foreground = ${colors.foreground-alt}
 ;------------------------------------------------------------------------------
 [module/backlight-acpi]
@@ -333,24 +324,22 @@ card = intel_backlight
 ;------------------------------------------------------------------------------
 type = internal/cpu
 interval = 2
-format-prefix = "    CPU  "
+format-prefix = "    cpu  "
 format-prefix-foreground = ${colors.foreground}
 format-prefix-background = ${colors.background-alt}
 format-underline = ${colors.underline}
-label = "%percentage%  "
-label-font = 2
+label = "%percentage%%    "
 label-background = ${colors.background-alt}
 ;------------------------------------------------------------------------------
 [module/memory]
 ;------------------------------------------------------------------------------
 type = internal/memory
 interval = 2
-format-prefix = "    RAM  "
+format-prefix = "    ram  "
 format-prefix-foreground = ${colors.foreground}
 format-prefix-background = ${colors.background-alt}
 format-underline = ${colors.underline}
-label = "%percentage_used%    "
-label-font = 2
+label = "%percentage_used%%    "
 label-background = ${colors.background-alt}
 ;------------------------------------------------------------------------------
 [module/wlan]
@@ -412,7 +401,6 @@ format-underline = ${colors.underline}
 ;date has no underline
 
 label = "  %date% %time%  "
-label-font = 2
 label-background = ${colors.background-alt}
 ;------------------------------------------------------------------------------
 [module/volume]
@@ -439,11 +427,11 @@ bar-volume-foreground-5 = #f5a70a
 bar-volume-foreground-6 = #ff5555
 bar-volume-gradient = false
 bar-volume-indicator = |
-bar-volume-indicator-font = 3
+bar-volume-indicator-font = 2
 bar-volume-fill = ─
-bar-volume-fill-font = 3
+bar-volume-fill-font = 2
 bar-volume-empty = ─
-bar-volume-empty-font = 3
+bar-volume-empty-font = 2
 bar-volume-empty-foreground = ${colors.foreground-alt}
 ;------------------------------------------------------------------------------
 [module/battery]
@@ -452,19 +440,17 @@ type = internal/battery
 battery = BAT0
 adapter = ADP1
 full-at = 98
-format-prefix = "ads"
+
 format-charging = <animation-charging> <label-charging>
 format-charging-background = ${colors.background-charging}
 format-charging-foreground = ${colors.foreground-charging}
 format-charging-underline = ${colors.underline-charging}
-label-charging= "%percentage%    "
-label-charging-font = 2
+label-charging = "    charging %percentage%%    "
 
-format-discharging = <ramp-capacity> <label-discharging>
+;format-discharging = <ramp-capacity> <label-discharging>
 
-;format-discharging = <label-discharging>
-label-discharging = "%percentage%    "
-label-discharging-font = 2
+format-discharging = <label-discharging>
+label-discharging = "  bat %percentage%%  "
 format-discharging-underline = ${colors.underline}
 format-discharging-background = ${colors.background-alt}
 
@@ -473,24 +459,21 @@ format-discharging-background = ${colors.background-alt}
 format-full-prefix = "    full    "
 format-full-prefix-foreground = ${colors.foreground}
 format-full-underline = ${colors.underline-alt}
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-foreground = ${colors.foreground-alt}
 
-ramp-capacity-0 = "    BATTERY "
-ramp-capacity-1 = "    BATTERY "
-ramp-capacity-2 = "    BATTERY "
-ramp-capacity-3 = "    BATTERY "
-ramp-capacity-4 = "    BATTERY "
-ramp-capacity-foreground = ${colors.foreground}
-
-animation-charging-0 = "    CHARGING  "
-animation-charging-1 = "    CHARGING  "
-animation-charging-2 = "    CHARGING  "
-animation-charging-3 = "    CHARGING  "
-animation-charging-4 = "    CHARGING  "
-animation-charging-foreground = ${colors.foreground}
-animation-charging-framerate = 1
-;------------------------------------------------------------------------------
+animation-charging-0 = "   "
+animation-charging-1 = "   "
+animation-charging-2 = "   "
+animation-charging-3 = "   "
+animation-charging-4 = "   "
+animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-framerate = 750
 [module/temperature]
-;------------------------------------------------------------------------------
 type = internal/temperature
 thermal-zone = 0
 warn-temperature = 60
